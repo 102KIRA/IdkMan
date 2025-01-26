@@ -1,0 +1,225 @@
+local key = "LEXUS"
+local discordLink = "https://discord.gg/9Byz7ZZxxN"
+local autoFarming = false
+local fallTime = 25 -- Flying duration in seconds
+local flySpeed = 326.39 -- Fly speed in studs/second
+local centerPosition = Vector3.new(0, 100, 0) -- Center of the map
+local chestPosition = Vector3.new(15, -5, 9495) -- Chest position
+local secondGui
+local showIcon
+local bodyVelocity -- Variable to keep track of flying
+local antiAfkButton -- Anti-AFK button
+local player = game.Players.LocalPlayer
+
+-- Create Main GUI
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local Frame = Instance.new("Frame", ScreenGui)
+Frame.Size = UDim2.new(0, 300, 0, 200)
+Frame.Position = UDim2.new(0.5, -150, 0.5, -100)
+Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+
+local Title = Instance.new("TextLabel", Frame)
+Title.Size = UDim2.new(1, 0, 0.2, 0)
+Title.Text = "BABFT Auto Farm | Enter Key"
+Title.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 18
+
+local KeyInput = Instance.new("TextBox", Frame)
+KeyInput.PlaceholderText = "Enter Key Here"
+KeyInput.Size = UDim2.new(0.8, 0, 0.2, 0)
+KeyInput.Position = UDim2.new(0.1, 0, 0.3, 0)
+KeyInput.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local CopyButton = Instance.new("TextButton", Frame)
+CopyButton.Text = "Copy Discord Link"
+CopyButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+CopyButton.Position = UDim2.new(0.1, 0, 0.55, 0)
+CopyButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+CopyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local SubmitButton = Instance.new("TextButton", Frame)
+SubmitButton.Text = "Submit Key"
+SubmitButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+SubmitButton.Position = UDim2.new(0.1, 0, 0.8, 0)
+SubmitButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+SubmitButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+-- Copy Discord link functionality
+CopyButton.MouseButton1Click:Connect(function()
+    if setclipboard then
+        setclipboard(discordLink)
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "Discord Link Copied",
+            Text = "Join the server for updates!",
+            Duration = 3
+        })
+    end
+end)
+
+-- Submit Key and trigger Auto Farm
+SubmitButton.MouseButton1Click:Connect(function()
+    if KeyInput.Text == key then
+        Frame:Destroy()
+        showAutoFarmGUI()
+    else
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "Invalid Key",
+            Text = "Try Again.",
+            Duration = 3
+        })
+    end
+end)
+
+-- Auto Farm GUI
+function showAutoFarmGUI()
+    secondGui = Instance.new("ScreenGui", game.CoreGui)
+    local Frame = Instance.new("Frame", secondGui)
+    Frame.Size = UDim2.new(0, 300, 0, 250)
+    Frame.Position = UDim2.new(0.5, -150, 0.5, -125)
+    Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+
+    -- Title
+    local Title = Instance.new("TextLabel", Frame)
+    Title.Size = UDim2.new(1, 0, 0.2, 0)
+    Title.Text = "BABFT Auto Farm"
+    Title.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.Font = Enum.Font.GothamBold
+    Title.TextSize = 18
+
+    -- Credits Message
+    local Credits = Instance.new("TextLabel", Frame)
+    Credits.Size = UDim2.new(1, 0, 0.2, 0)
+    Credits.Position = UDim2.new(0, 0, 0.2, 0)
+    Credits.Text = "UPDATE 1 CREDITS - KIRA"
+    Credits.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Credits.TextColor3 = Color3.fromRGB(255, 255, 0)
+    Credits.Font = Enum.Font.GothamBold
+    Credits.TextSize = 16
+
+    -- Start Auto Farm Button
+    local ToggleButton = Instance.new("TextButton", Frame)
+    ToggleButton.Text = "Start Auto Farm"
+    ToggleButton.Size = UDim2.new(0.8, 0, 0.3, 0)
+    ToggleButton.Position = UDim2.new(0.1, 0, 0.4, 0)
+    ToggleButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+    -- Hide Auto Farm GUI Button
+    local HideButton = Instance.new("TextButton", Frame)
+    HideButton.Text = "Hide Auto Farm GUI"
+    HideButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+    HideButton.Position = UDim2.new(0.1, 0, 0.8, 0)
+    HideButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    HideButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+    -- Anti-AFK Button
+    antiAfkButton = Instance.new("TextButton", Frame)
+    antiAfkButton.Text = "ANTI-AFK-WORK-FOR-PC-ONLY"
+    antiAfkButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+    antiAfkButton.Position = UDim2.new(0.1, 0, 0.7, 0)
+    antiAfkButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    antiAfkButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+    -- Icon to show the second GUI
+    showIcon = Instance.new("ImageButton", game.CoreGui)
+    showIcon.Size = UDim2.new(0, 50, 0, 50)
+    showIcon.Position = UDim2.new(0.9, 0, 0, 0)
+    showIcon.Image = "rbxassetid://1234567890" -- Your icon asset ID here
+    showIcon.Visible = false -- Initially hidden
+
+    -- Hide the GUI functionality
+    HideButton.MouseButton1Click:Connect(function()
+        secondGui.Enabled = false
+        showIcon.Visible = true -- Show the icon when the GUI is hidden
+    end)
+
+    -- Show GUI functionality when the icon is clicked
+    showIcon.MouseButton1Click:Connect(function()
+        secondGui.Enabled = true
+        showIcon.Visible = false
+    end)
+
+    ToggleButton.MouseButton1Click:Connect(function()
+        autoFarming = not autoFarming
+        ToggleButton.Text = autoFarming and "Stop Auto Farm" or "Start Auto Farm"
+        if autoFarming then
+            startAutoFarm()
+        else
+            stopFlying() -- Stop flying when autofarm is disabled
+        end
+    end)
+
+    -- Anti-AFK functionality
+    antiAfkButton.MouseButton1Click:Connect(function()
+        -- Send a random event to prevent AFK kick
+        while true do
+            if game.Players.LocalPlayer.Character then
+                game.Players.LocalPlayer.Character.Humanoid:Move(Vector3.new(math.random(), 0, math.random())) -- Random movement
+            end
+            wait(60) -- Update every 60 seconds
+        end
+    end)
+end
+
+-- Auto Farm Functionality (Runs infinitely)
+function startAutoFarm()
+    while autoFarming do
+        local character = player.Character or player.CharacterAdded:Wait()
+        local hrp = character:FindFirstChild("HumanoidRootPart")
+
+        if hrp then
+            -- Check player's current stage and prevent teleport to the center if at the 5th stage
+            local currentStage = getPlayerStage(player)  -- Replace this with your method of fetching the current stage
+            if currentStage ~= 5 then
+                -- Teleport to the center of the map only if not at stage 5
+                hrp.CFrame = CFrame.new(centerPosition)
+            end
+
+            -- Enable noclip
+            enableNoclip(character)
+
+            -- Add flying force with higher speed (1175 km/h)
+            bodyVelocity = Instance.new("BodyVelocity")
+            bodyVelocity.MaxForce = Vector3.new(10000, 10000, 10000)
+            bodyVelocity.Velocity = Vector3.new(0, 0, flySpeed)
+            bodyVelocity.Parent = hrp
+
+            wait(fallTime)
+
+            -- Adjust position slightly to the right by 5% and a little back to reach chest
+            hrp.CFrame = CFrame.new(chestPosition + Vector3.new(0.05 * chestPosition.X, 0, -5))  -- Adjust right and back
+
+            -- Kill player to get coins
+            character:BreakJoints()
+
+            -- Wait for the respawn and restart the farm after 1 second
+            wait(1)
+        end
+    end
+end
+
+-- Stop flying (when Auto Farm is stopped)
+function stopFlying()
+    if bodyVelocity then
+        bodyVelocity:Destroy()
+    end
+end
+
+-- Enable Noclip (No Collision)
+function enableNoclip(character)
+    for _, part in pairs(character:GetChildren()) do
+        if part:IsA("BasePart") then
+            part.CanCollide = false
+        end
+    end
+end
+
+-- Function to get the current stage of the player (replace with actual game logic)
+function getPlayerStage(player)
+    -- Replace this with the actual logic that determines the player's current stage in the game
+    return 1  -- Example: Stage 1 (you should fetch the real stage value)
+end
